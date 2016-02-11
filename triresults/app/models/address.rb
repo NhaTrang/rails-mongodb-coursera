@@ -14,22 +14,18 @@ class Address
   
   def self.demongoize(object)
     case object
-    when nil then
-      nil
-    when Hash then
-      Address.new(object)
+    when nil then nil
+    when Hash then Address.new(object)
     end
   end
   
   def self.evolve(object)
     case object
-    when nil then
-      nil
-    when Hash then
-      {city: object[:city], state: object[:state],
-                            loc: {type: object[:loc][:type], coordinates: [object[:loc][:coordinates][0],object[:loc][:coordinates][1]]}}
-    when Address then
-      object.mongoize
+    when nil then nil
+    when Hash then {city: object[:city], state: object[:state],
+                          loc: {type: object[:loc][:type],
+                          coordinates: [object[:loc][:coordinates][0],object[:loc][:coordinates][1]]}}
+    when Address then object.mongoize
     end
   end
 end

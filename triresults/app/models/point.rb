@@ -16,12 +16,9 @@ class Point
   
   def self.demongoize(object)
     case object
-    when nil then
-      nil
-    when Hash then
-      Point.new(object[:coordinates][0], object[:coordinates][1])
-    when Point then
-      Point.new(object.longitude, object.latitude)
+    when nil then nil
+    when Hash then Point.new(object[:coordinates][0], object[:coordinates][1])
+    when Point then Point.new(object.longitude, object.latitude)
     end
   end
   
@@ -32,12 +29,10 @@ class Point
   private
   def self.simplify(object)
     case object
-    when nil then
-      nil
-    when Hash then
-      {coordinates: [object[:coordinates][0], object[:coordinates][1]]}
-    when Point then
-      {coordinates: [object.longitude, object.latitude]}
+    when nil then nil
+    when Hash then  {coordinates: [object[:coordinates][0], object[:coordinates][1]]}
+    when Point then object.mongoize
+      #{coordinates: [object.longitude, object.latitude]}
     end
   end
 end

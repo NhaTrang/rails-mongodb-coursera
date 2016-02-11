@@ -30,7 +30,7 @@ class Placing
     case object
     when nil then nil
     when Hash then {name: object[:name], place: object[:place]}
-    when Placing then {name: object.name, place: object.place}
+    when Placing then object.mongoize
     end
   end
 end
