@@ -7,6 +7,7 @@ class Entrant
   embeds_many :results, class_name: 'LegResult', order: [:"event.o".asc],
                         after_add: :update_total, after_remove: :update_total
   embeds_one :race, class_name: 'RaceRef'
+  embeds_one :racer, as: :parent, class_name: 'RacerInfo'
 
   field :bib, as: :bib, type: Integer
   field :secs, as: :secs, type: Float
