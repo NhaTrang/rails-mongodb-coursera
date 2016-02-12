@@ -13,6 +13,7 @@ class Event
   field :u, as: :units, type: String
   
   embedded_in :parent, polymorphic: true, touch: true
+  
   validates_presence_of :order, :name
   
   def meters
