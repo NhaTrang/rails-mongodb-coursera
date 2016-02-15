@@ -35,11 +35,11 @@ class Race
         end
       end
     end
-    
-    def self.default
-      Race.new do |race|
-        DEFAULT_EVENTS.keys.each {|leg|race.send("#{leg}")}
-      end
+  end
+  
+  def self.default
+    Race.new do |race|
+      DEFAULT_EVENTS.keys.each {|leg|race.send("#{leg}")}
     end
   end
 end
