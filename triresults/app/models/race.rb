@@ -5,6 +5,7 @@ class Race
   field :n, as: :name, type: String
   field :date, as: :date, type: Date
   field :loc, as: :location, type: Address
+  field :next_bib, as: :next_bib, type: Integer, default: 0
   
   scope :upcoming, -> { where(:date.gte => Date.today) }
   scope :past, -> { where(:date.lt => Date.today) }
@@ -21,17 +22,17 @@ class Race
                     
   DEFAULT_EVENTS.keys.each do |name|
     define_method("#{name}") do
-      event=events.select {|event| name==event.name}.first
-      event||=events.build(DEFAULT_EVENTS["#{name}"])
+      event = events.select {|event| name==event.name}.first
+      event ||= events.build(DEFAULT_EVENTS["#{name}"])
     end
 
     ["order","distance","units"].each do |prop|
       if DEFAULT_EVENTS["#{name}"][prop.to_sym]
         define_method("#{name}_#{prop}") do
-          event=self.send("#{name}").send("#{prop}")
+          event = self.send("#{name}").send("#{prop}")
         end
         define_method("#{name}_#{prop}=") do |value|
-          event=self.send("#{name}").send("#{prop}=", value)
+          event = self.send("#{name}").send("#{prop}=", value)
         end
       end
     end
@@ -52,5 +53,25 @@ class Race
       object.send("#{action}=", name)
       self.location=object
     end
+  end
+  
+  def next_bib
+    self[:next_bib] = self[:next_bib] + 1
+  end
+  
+  def get_group(racer)
+    if racer && racer.birth_year && racer.gender
+      quotient = (date.year-racer.birth_year) / 10
+      min_age = quotient * 10
+      max_age = ((quotient + 1) * 10) - 1
+      gender = racer.gender
+      name = min_age >= 60 ? "masters #{gender}" : "#{min_age} to #{max_age} (#{gender})"
+      Placing.demongoize(:name=>name)
+    end
+  end
+  
+  def create_entrant(racer)
+    entrant = Entrant.new
+    
   end
 end
