@@ -1,10 +1,16 @@
 class Address
   attr_accessor :city, :state, :location
   
-  def initialize(params)
-    @city = params[:city]
-    @state = params[:state]
-    @location = Point.demongoize(params[:loc])
+  def initialize(params = {})
+    if params.nil?
+      @city = ''
+      @state = ''
+      @location = ''
+    else
+      @city = params[:city]
+      @state = params[:state]
+      @location = Point.demongoize(params[:loc])
+    end
   end
   
   def mongoize

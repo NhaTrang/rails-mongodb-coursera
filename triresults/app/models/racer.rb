@@ -11,7 +11,7 @@ class Racer
   delegate :birth_year, :birth_year=, to: :info
   delegate :city, :city=, to: :info
   delegate :state, :state=, to: :info
-  
+
   before_create do |racer|
     racer.info.id = racer.id
   end

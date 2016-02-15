@@ -1,9 +1,13 @@
 class Placing
   attr_accessor :name, :place
  
-  def initialize(params)
-    @name = params[:name]
-    @place = params[:place]
+  #def initialize(params)
+  #  @name = params[:name]
+  #  @place = params[:place]
+  #end
+  def initialize(name, place)
+    @name = name
+    @place = place
   end
   
   def mongoize
@@ -17,7 +21,7 @@ class Placing
   def self.demongoize(object)
     case object
     when nil then nil
-    when Hash then Placing.new(object)
+    when Hash then Placing.new(object[:name], object[:place])
     end
   end
   
