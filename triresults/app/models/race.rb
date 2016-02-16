@@ -61,7 +61,7 @@ class Race
   
   def get_group(racer)
     if racer && racer.birth_year && racer.gender
-      quotient = (date.year-racer.birth_year) / 10
+      quotient = (date.year - racer.birth_year) / 10
       min_age = quotient * 10
       max_age = ((quotient + 1) * 10) - 1
       gender = racer.gender
@@ -72,6 +72,18 @@ class Race
   
   def create_entrant(racer)
     entrant = Entrant.new
+    entrant.race = self.attributes.symbolize_keys.slice(:_id, :n, :date)
+    entrant.racer = racer.info.attributes
+    entrant.group = 'racer.get_group'
+    if entrant.validate
+      entrant.bib = self.next_bib# ??
+      entrant.save
+      entrant
+    end
+    entrant
+  end
+  
+  def upcoming_available_to(racer)
     
   end
 end

@@ -5,8 +5,8 @@ class Entrant
   RESULTS = {"swim"=>SwimResult, "t1"=>LegResult, "bike"=>BikeResult, "t2"=>LegResult, "run"=>RunResult}
   store_in collection: 'results'
   
-  scope :upcoming, -> { where(:race.date.gte => Date.today) }
-  scope :past, -> { where(:race.date.lt => Date.today) }
+  scope :upcoming, -> { where('race.date.gte' => Date.today) }
+  scope :past, -> { where('race.date.lt' => Date.today) }
   
   embeds_many :results, class_name: 'LegResult', order: [:"event.o".asc],
                         after_add: :update_total, after_remove: :update_total
@@ -30,9 +30,8 @@ class Entrant
   delegate :date, :date=, to: :race, prefix: "race"
   
   def update_total(result)
-    #result = results.to_a.map{|r| r.secs}
     self.secs = results.to_a.map{|r| r.secs}.compact.reduce(0, :+)
-    #self.secs# = results.inject(0){|sum,e| sum += e.secs }
+    #self.secs = results.compact.inject(0){|sum,e| sum += e.secs }
   end
   
   def the_race
