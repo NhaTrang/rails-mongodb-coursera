@@ -56,7 +56,8 @@ class Race
   end
   
   def next_bib
-    self[:next_bib] = self[:next_bib] + 1
+    self.inc(next_bib: 1)
+    self[:next_bib]
   end
   
   def get_group(racer)
@@ -74,7 +75,10 @@ class Race
     entrant = Entrant.new
     entrant.race = self.attributes.symbolize_keys.slice(:_id, :n, :date)
     entrant.racer = racer.info.attributes
-    entrant.group = 'racer.get_group'
+    entrant.group = self.get_group(racer)
+    self.events.each do |event|
+      entrant.send("#{event.name}=", event)
+    end
     if entrant.validate
       entrant.bib = self.next_bib# ??
       entrant.save
@@ -83,7 +87,9 @@ class Race
     entrant
   end
   
-  def upcoming_available_to(racer)
-    
+  def self.upcoming_available_to(racer)
+    upcoming_race_ids = racer.races.upcoming.pluck(:race).map {|r| r[:_id]}
+    all_upcoming_race_ids = Race.upcoming.map {|r| r[:_id]}
+    #all_upcoming_race_ids - upcoming_race_ids
   end
 end

@@ -5,8 +5,8 @@ class Entrant
   RESULTS = {"swim"=>SwimResult, "t1"=>LegResult, "bike"=>BikeResult, "t2"=>LegResult, "run"=>RunResult}
   store_in collection: 'results'
   
-  scope :upcoming, -> { where('race.date.gte' => Date.today) }
-  scope :past, -> { where('race.date.lt' => Date.today) }
+  scope :upcoming, -> { where(:'race.date' => { :$gte => Date.today }) }
+  scope :past, -> { where(:'race.date' => { :$lt => Date.today }) }
   
   embeds_many :results, class_name: 'LegResult', order: [:"event.o".asc],
                         after_add: :update_total, after_remove: :update_total
