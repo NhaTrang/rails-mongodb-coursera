@@ -28,27 +28,24 @@
 <table>
   <thead>
     <tr>
-      <th>Place</th>
-      <th>Time</th>
       <th>Name</th>
-      <th>Bib#</th>
-      <th>City</th>
-      <th>State</th>
+      <th>Date</th>
+      <th>Overall</th>
       <th>Gender</th>
-      <th>Gender Place</th>
       <th>Group</th>
-      <th>Group place</th>
-      <th>Swim</th>
-      <th>Pace 100</th>
-      <th>T1</th>
-      <th>Bike</th>
-      <th>MPH</th>
-      <th>T2</th>
-      <th>Run</th>
-      <th>Min Mile</th>
+      <th colspan="3"></th>
     </tr>
   </thead>
-  
+<% @races.each do |r| %>
+<tr>
+  <td><%= r.race_name %></td>
+  <td><%= r.race_date %></td>
+  <td><%= r.overall_place %></td>
+  <td><%= r.gender_place %></td>
+  <td><%= r.group_place %></td>
+  <td><%= link_to 'Results', race_path(r.race) %></td>
+</tr>
+<% end %>
 </table>
 <%= link_to 'Edit', edit_racer_path(@racer) %> |
 <%= link_to 'Back', racers_path %>
