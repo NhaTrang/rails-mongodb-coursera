@@ -1,0 +1,95 @@
+<p id="notice"><%= notice %></p>
+<p>
+  <strong>Name:</strong>
+  <%= @race.name %>
+</p>
+<p>
+  <strong>Date:</strong>
+  <%= @race.date %>
+</p>
+<p>
+  <strong>City:</strong>
+  <%= @race.city %>
+</p>
+<p>
+  <strong>State:</strong>
+  <%= @race.state %>
+</p>
+<p>
+  <strong>Swim distance:</strong>
+  <%= @race.swim_distance %>
+</p>
+<p>
+  <strong>Swim units:</strong>
+  <%= @race.swim_units %>
+</p>
+<p>
+  <strong>Bike distance:</strong>
+  <%= @race.bike_distance %>
+</p>
+<p>
+  <strong>Bike units:</strong>
+  <%= @race.bike_units %>
+</p>
+<p>
+  <strong>Run distance:</strong>
+  <%= @race.run_distance %>
+</p>
+<p>
+  <strong>Run units:</strong>
+  <%= @race.run_units %>
+</p>
+<h2>Entrants:</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Place</th>
+      <th>Time</th>
+      <th>Name</th>
+      <th>Bib#</th>
+      <th>City</th>
+      <th>State</th>
+      <th>Gender</th>
+      <th>Gender Place</th>
+      <th>Group</th>
+      <th>Group place</th>
+      <th>Swim</th>
+      <th>Pace 100</th>
+      <th>T1</th>
+      <th>Bike</th>
+      <th>MPH</th>
+      <th>T2</th>
+      <th>Run</th>
+      <th>Min Mile</th>
+    </tr>
+  </thead>
+<% @entrants.each do |e| %>
+  <tr>
+    <td><%= e.overall_place %></td>
+    <td><%= format_hours(e.secs) %></td>
+    <% if e.racer.id %>
+      <td><%= link_to "#{e.last_name}, #{e.first_name}", racer_path(e.racer.id) %></td>
+    <% else %>
+      <td><%= "#{e.last_name}, #{e.first_name}" %></td>
+    <% end %>
+    <td><%= e.bib %></td>
+    <td><%= e.city %></td>
+    <td><%= e.state %></td>
+    <td><%= e.racer_gender %></td>
+    <td><%= e.gender_place %></td>
+    <td><%= e.group_name %></td>
+    <td><%= e.group_place %></td>
+    <td><%= format_hours(e.swim_secs) %></td>
+    <td><%= format_minutes(e.swim_pace_100) %></td>
+    <td><%= format_minutes(e.t1_secs) %></td>
+    <td><%= format_hours(e.bike_secs) %></td>
+    <td><%= format_mph(e.bike_mph) %></td>
+    <td><%= format_minutes(e.t2_secs) %></td>
+    <td><%= format_hours(e.run_secs) %></td>
+    <td><%= format_minutes(e.run_mmile) %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= link_to 'Edit', edit_race_path(@race) %> |
+<%= link_to 'Back', races_path %>
