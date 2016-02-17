@@ -4,6 +4,16 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
+  namespace :api do
+    resources :races, only: [:index, :show, :create] do
+      resources :results, only: [:index, :show]
+    end
+    resources :racers, only: [:index, :show] do
+      resources :entries, only: [:index, :show]
+    end
+   
+  end
+
   resources :racers do
     post "entries" => "racers#create_entry"
   end
