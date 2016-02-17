@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
   namespace :api do
-    resources :races, only: [:index, :show, :create] do
+    resources :races, only: [:index, :show, :create, :update, :destroy] do
       resources :results, only: [:index, :show]
     end
     resources :racers, only: [:index, :show] do

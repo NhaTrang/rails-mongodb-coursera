@@ -11,12 +11,23 @@ module Api
         # implementation
       end
     end
+    
+    # GET /api/races/:id
     def show
       if !request.accept || request.accept == "*/*"
         render plain: "/api/races/#{params[:id]}"
       else
-        # implementation
+        @race = Race.find_by(_id: params[:id])
+        render json: @race
       end
+    end
+    
+    # PUT,PATCH /api/races/:id
+    def update
+      Rails.logger.debug("method=#{request.method}")
+      @race = Race.find(params[:id])
+      @race.update(race_params)
+      render json: @race, status: :ok
     end
     
     def create
@@ -27,18 +38,25 @@ module Api
           render plain: :nothing, status: :ok
         end
       else
-        race = Race.new(race_params)
-        if race.save
-          render plain: race.name, status: :created
+        @race = Race.new(race_params)
+        if @race.save
+          render plain: @race.name, status: :created
         else
           render plain: :nothing, status: :error
         end
       end
     end
     
+    # DELETE /api/races/:id
+    def destroy
+      @race = Race.find(params[:id])
+      @race.destroy
+      render nothing: true, status: :no_content
+    end
+    
     private 
       def race_params
-        params.require(:race).permit(:name, :date)
+        params.require(:race).permit(:name, :date, :race_id)
       end
   end
 end
