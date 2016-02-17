@@ -1,0 +1,41 @@
+<h1>Editing Racer</h1>
+
+<%= render 'form' %>
+<% if @racer.persisted? %>
+<h2>Available Races:</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Date</th>
+      <th>City</th>
+      <th>State</th>
+      <th>Swim</th>
+      <th>Units</th>
+      <th>Bike</th>
+      <th>units</th>
+      <th>Run</th>
+      <th>units</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+<% @races.each do |r| %>
+<tr>
+  <td><%= r.name %></td>
+  <td><%= r.date %></td>
+  <td><%= r.city %></td>
+  <td><%= r.state %></td>
+  <td><%= r.swim_distance %></td>
+  <td><%= r.swim_units %></td>
+  <td><%= r.bike_distance %></td>
+  <td><%= r.bike_units %></td>
+  <td><%= r.run_distance %></td>
+  <td><%= r.run_units %></td>
+  <td><%= link_to 'Register', racer_entries_path(@racer, race_id: r.id), method: :post %></td>
+  <td></td>
+</tr>
+<% end %>
+</table>
+<% end %>
+<%= link_to 'Show', @racer %> |
+<%= link_to 'Back', racers_path %>
