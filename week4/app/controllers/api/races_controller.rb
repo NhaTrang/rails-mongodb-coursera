@@ -12,7 +12,7 @@ module Api
           render plain: "/api/races, offset=[#{params[:offset]}], limit=[#{params[:limit]}]"
         end
       else
-        # implementation
+        render plain: "#{request.accept}]"
       end
     end
     
@@ -21,8 +21,29 @@ module Api
       if !request.accept || request.accept == "*/*"
         render plain: "/api/races/#{params[:id]}"
       else
-        @race = Race.find_by(_id: params[:id])
-        render json: @race
+        if request.accept == 'application/json'
+          begin
+            @race = Race.find_by(_id: params[:id])
+            render json: @race.to_json
+          rescue Mongoid::Errors::DocumentNotFound
+            hash = {'msg' => "woops: cannot find race[#{params[:id]}]"}
+            render json: hash, status: :not_found
+          end
+        elsif request.accept == 'application/xml'
+          begin
+            @race = Race.find_by(_id: params[:id])
+            render xml: @race.to_xml
+          rescue Mongoid::Errors::DocumentNotFound
+            error = Nokogiri::XML::Builder.new { |xml| 
+              xml.error do
+                  xml.msg "woops: cannot find race[#{params[:id]}]"
+                  xml.selfclosing
+              end  }
+            render xml: error.to_xml, status: :not_found
+          end
+        else 
+          render plain: 'Unsupported content-type[text/plain]', status: :unsupported_media_type
+        end
       end
     end
     
