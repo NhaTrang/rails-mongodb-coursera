@@ -24,7 +24,9 @@ module Api
         if request.accept == 'application/json'
           begin
             @race = Race.find_by(_id: params[:id])
-            render json: @race.to_json
+            hash = JSON.parse(@race.to_json)
+            hash['name'] = hash.delete 'n'
+            render json: hash
           rescue Mongoid::Errors::DocumentNotFound
             hash = {'msg' => "woops: cannot find race[#{params[:id]}]"}
             render json: hash, status: :not_found
@@ -32,17 +34,21 @@ module Api
         elsif request.accept == 'application/xml'
           begin
             @race = Race.find_by(_id: params[:id])
-            render xml: @race.to_xml
+            race = Nokogiri::XML::Builder.new { |xml| 
+              xml.race do
+                  xml.name @race.name
+                  xml.date @race.date
+              end }
+            render xml: race
           rescue Mongoid::Errors::DocumentNotFound
             error = Nokogiri::XML::Builder.new { |xml| 
               xml.error do
                   xml.msg "woops: cannot find race[#{params[:id]}]"
-                  xml.selfclosing
-              end  }
+              end }
             render xml: error.to_xml, status: :not_found
           end
         else 
-          render plain: 'Unsupported content-type[text/plain]', status: :unsupported_media_type
+          render plain: ' Unsupported content-type[text/plain]', status: :unsupported_media_type
         end
       end
     end
